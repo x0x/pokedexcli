@@ -1,3 +1,3 @@
-module github.com/x0x/pokedexcli
+module pokedexcli
 
 go 1.20

@@ -6,10 +6,10 @@ import (
 	"os"
 )
 
-func startRepl() {
+func StartRepl() {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Print("pokedexcli>")
+		fmt.Print("pokedexcli> ")
 		scanner.Scan()
 		text := scanner.Text()
 
@@ -23,7 +23,6 @@ func startRepl() {
 			continue
 		} else {
 			fmt.Println("Unknown command")
-
 		}
 	}
 }
@@ -38,13 +37,23 @@ func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
 		"help": {
 			name:        "help",
-            description: "Displays a help message",
+			description: "Displays a help message",
 			callBack:    commandHelp,
 		},
 		"exit": {
 			name:        "exit",
-            description: "Exit the Pokedex",
+			description: "Exit the Pokedex",
 			callBack:    commandExit,
+		},
+		"map": {
+			name:        "map",
+			description: "Displays the names of 20 location areas in the Pokemon world",
+			callBack:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Displays the names of previous 20 location areas in the Pokemon world",
+			callBack:    commandMapB,
 		},
 	}
 }
