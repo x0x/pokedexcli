@@ -6,18 +6,14 @@ import (
 )
 
 type Config struct {
-  nextLocationUrl *string
-  prevLocationUrl *string
+	nextLocationUrl *string
+	prevLocationUrl *string
 }
 
 var cfg *Config = &Config{}
 
 func commandMap() error {
-
-	fmt.Println("hello world Welcome to Map")
-
 	response, err := pokeapi.GetLocations(cfg.nextLocationUrl)
-
 	if err != nil {
 		return nil
 	}
@@ -31,16 +27,18 @@ func commandMap() error {
 }
 
 func commandMapB() error {
-	fmt.Println("Hello to Mapb")
+	if cfg.prevLocationUrl == nil {
+		fmt.Println("You are on the first page")
+		return nil
+	}
 
 	response, err := pokeapi.GetLocations(cfg.prevLocationUrl)
-
 	if err != nil {
 		return err
 	}
 
 	PrettyPrint(response)
-  cfg.prevLocationUrl = response.Previous
+	cfg.prevLocationUrl = response.Previous
 	cfg.nextLocationUrl = response.Next
 
 	return nil

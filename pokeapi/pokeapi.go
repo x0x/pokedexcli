@@ -3,8 +3,10 @@ package pokeapi
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
+	"time"
+	"fmt"
+	"pokedexcli/pokecache"
 )
 
 type Response struct {
@@ -21,32 +23,42 @@ type Results struct {
 
 var baseUrl string = "https://pokeapi.co/api/v2/location"
 
+var cache pokecache.Cache = pokecache.NewCache(time.Duration(5 * time.Minute))
+
 func GetLocations(pageUrl *string) (Response, error) {
 	url := baseUrl
 	if pageUrl != nil {
 		url = *pageUrl
 	}
 
+	// cache check
+	data, ok := cache.Get(url)
+	var response Response
+	if ok {
+    fmt.Println("[Cache hit]")
+    response :=  Response{}
+		if err := json.Unmarshal(data, &response); err != nil {
+			return Response{}, err
+		}
+  	return response, nil
+	}
+  
+  fmt.Println("[Cache miss]")
 	res, err := http.Get(url)
 	if err != nil {
-		log.Fatal(err)
 		return Response{}, err
 	}
 
 	body, err := io.ReadAll(res.Body)
+  if err != nil {
+    return response, err
+  }
+
 	defer res.Body.Close()
-
-	var response Response
-
+  
+  cache.Add(url, body)
 	if err := json.Unmarshal(body, &response); err != nil {
 		return Response{}, err
-	}
-
-	if res.StatusCode > 299 {
-		log.Fatalf("Response failed with status code: %d and\nbody: %s\n", res.StatusCode, body)
-	}
-	if err != nil {
-		log.Fatal(err)
 	}
 	return response, nil
 }
