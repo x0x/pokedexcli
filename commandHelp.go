@@ -1,8 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"pokedexcli/pokeapi"
+)
 
-func commandHelp() error {
+func commandHelp(pokeapiClient *pokeapi.Client) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage")
 	for _, cmd := range getCommands() {

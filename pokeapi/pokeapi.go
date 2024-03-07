@@ -2,11 +2,10 @@ package pokeapi
 
 import (
 	"encoding/json"
-	"io"
-	"net/http"
-	"time"
 	"fmt"
+	"io"
 	"pokedexcli/pokecache"
+	"time"
 )
 
 type Response struct {
@@ -25,7 +24,7 @@ var baseUrl string = "https://pokeapi.co/api/v2/location"
 
 var cache pokecache.Cache = pokecache.NewCache(time.Duration(5 * time.Minute))
 
-func GetLocations(pageUrl *string) (Response, error) {
+func GetLocations(pokeapiClient *Client, pageUrl *string) (Response, error) {
 	url := baseUrl
 	if pageUrl != nil {
 		url = *pageUrl
@@ -44,7 +43,7 @@ func GetLocations(pageUrl *string) (Response, error) {
 	}
   
   fmt.Println("[Cache miss]")
-	res, err := http.Get(url)
+	res, err := pokeapiClient.httpClient.Get(url)
 	if err != nil {
 		return Response{}, err
 	}

@@ -1,8 +1,11 @@
 package main
 
-import "os"
+import (
+	"os"
+	"pokedexcli/pokeapi"
+)
 
-func commandExit() error {
+func commandExit(pokeapiClient *pokeapi.Client) error {
 	os.Exit(0)
 	return nil
 }

@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"pokedexcli/pokeapi"
+
 )
 
-func StartRepl() {
+func StartRepl(pokeapiClient *pokeapi.Client) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("pokedexcli> ")
@@ -16,7 +18,7 @@ func StartRepl() {
 		commands, exists := getCommands()[text]
 
 		if exists {
-			err := commands.callBack()
+			err := commands.callBack(pokeapiClient)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -30,7 +32,7 @@ func StartRepl() {
 type cliCommand struct {
 	name        string
 	description string
-	callBack    func() error
+	callBack    func(*pokeapi.Client) error
 }
 
 func getCommands() map[string]cliCommand {
