@@ -12,12 +12,13 @@ type Config struct {
 
 var cfg *Config = &Config{}
 
-func commandMap(pokeapiClient *pokeapi.Client) error {
+func commandMap(pokeapiClient *pokeapi.Client, args ...string) error {
+
 	response, err := pokeapi.GetLocations(pokeapiClient,cfg.nextLocationUrl)
 	if err != nil {
 		return nil
 	}
-
+  
 	PrettyPrint(response)
 
 	cfg.prevLocationUrl = response.Previous
@@ -26,7 +27,7 @@ func commandMap(pokeapiClient *pokeapi.Client) error {
 	return nil
 }
 
-func commandMapB(pokeapiClient *pokeapi.Client) error {
+func commandMapB(pokeapiClient *pokeapi.Client, args ...string) error {
 	if cfg.prevLocationUrl == nil {
 		fmt.Println("You are on the first page")
 		return nil
@@ -44,7 +45,7 @@ func commandMapB(pokeapiClient *pokeapi.Client) error {
 	return nil
 }
 
-func PrettyPrint(i pokeapi.Response) {
+func PrettyPrint(i pokeapi.GetResponse) {
 	for _, value := range i.Results {
 		fmt.Println(value.Name)
 	}

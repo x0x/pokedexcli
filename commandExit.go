@@ -5,7 +5,7 @@ import (
 	"pokedexcli/pokeapi"
 )
 
-func commandExit(pokeapiClient *pokeapi.Client) error {
+func commandExit(pokeapiClient *pokeapi.Client, args ...string) error {
 	os.Exit(0)
 	return nil
 }

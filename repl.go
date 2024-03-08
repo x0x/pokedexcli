@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"pokedexcli/pokeapi"
-
+	"strings"
 )
 
 func StartRepl(pokeapiClient *pokeapi.Client) {
@@ -14,11 +14,16 @@ func StartRepl(pokeapiClient *pokeapi.Client) {
 		fmt.Print("pokedexcli> ")
 		scanner.Scan()
 		text := scanner.Text()
-
-		commands, exists := getCommands()[text]
+    input := strings.Fields(text)
+		commands, exists := getCommands()[input[0]]
+    
+    args := []string{}
+    if len(input) > 1 {
+      args = input[1 : ]   
+    }
 
 		if exists {
-			err := commands.callBack(pokeapiClient)
+			err := commands.callBack(pokeapiClient, args...)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -32,7 +37,7 @@ func StartRepl(pokeapiClient *pokeapi.Client) {
 type cliCommand struct {
 	name        string
 	description string
-	callBack    func(*pokeapi.Client) error
+	callBack    func(*pokeapi.Client, ...string) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -57,5 +62,11 @@ func getCommands() map[string]cliCommand {
 			description: "Displays the names of previous 20 location areas in the Pokemon world",
 			callBack:    commandMapB,
 		},
+    "explore": {
+ 			name:        "explore",
+			description: "Displays the names of previous 20 location areas in the Pokemon world",
+			callBack:    commandExplore,
+	   },
+
 	}
 }

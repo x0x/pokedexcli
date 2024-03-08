@@ -5,7 +5,7 @@ import (
 	"pokedexcli/pokeapi"
 )
 
-func commandHelp(pokeapiClient *pokeapi.Client) error {
+func commandHelp(pokeapiClient *pokeapi.Client, args ...string) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage")
 	for _, cmd := range getCommands() {
