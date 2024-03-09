@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"pokedexcli/pokeapi"
 )
 
@@ -13,12 +14,11 @@ type Config struct {
 var cfg *Config = &Config{}
 
 func commandMap(pokeapiClient *pokeapi.Client, args ...string) error {
-
-	response, err := pokeapi.GetLocations(pokeapiClient,cfg.nextLocationUrl)
+	response, err := pokeapi.GetLocations(pokeapiClient, cfg.nextLocationUrl)
 	if err != nil {
-		return nil
+		return err
 	}
-  
+
 	PrettyPrint(response)
 
 	cfg.prevLocationUrl = response.Previous

@@ -6,16 +6,6 @@ import (
 	"io"
 )
 
-type GetResponse struct {
-	Count    int     `json:"count"`
-	Next     *string `json:"next"`
-	Previous *string `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-		URL  string `json:"-"`
-	} `json:"results"`
-}
-
 var baseUrl string = "https://pokeapi.co/api/v2/location"
 
 func GetLocations(pokeapiClient *Client, pageUrl *string) (GetResponse, error) {
@@ -36,18 +26,16 @@ func GetLocations(pokeapiClient *Client, pageUrl *string) (GetResponse, error) {
 		return response, nil
 	}
 
-	fmt.Println("[Cache miss]")
 	res, err := pokeapiClient.httpClient.Get(url)
 	if err != nil {
 		return GetResponse{}, err
 	}
 
+	defer res.Body.Close()
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		return response, err
 	}
-
-	defer res.Body.Close()
 
 	pokeapiClient.cache.Add(url, body)
 	if err := json.Unmarshal(body, &response); err != nil {
